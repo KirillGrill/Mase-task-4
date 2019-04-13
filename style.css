@@ -1,0 +1,42 @@
+* {
+    box-sizing: border-box;
+}
+.maze {
+    width: 502px;
+    height: 500px;
+    display: table;
+    border: 1px solid black;
+    margin: auto;
+}
+.cell {
+    background-color: #fff;
+    width: 50px;
+    height: 50px;
+    float: left;
+    border: 1px solid black;
+    border-collapse: collapse;
+    display: table-cell;
+    text-align: center;
+    line-height: 50px;
+}
+.cell.wall {
+    background-color: #000;
+}
+.cell.start {
+    background-color: #afa;
+}
+.cell.finish {
+    background-color: #faa;
+}
+.cell.route {
+    background-color: #ece
+}
+
+.buttons {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.findWayToExit {
+    margin-left: 30px;
+}
