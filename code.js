@@ -54,9 +54,9 @@
     window.addEventListener('load', init);
 
     function init() {
-
         const newField = document.getElementById('newField');
         const findWayToExit = document.getElementById('findWayToExit');
+
         newField.addEventListener('click', drowNewField);
         findWayToExit.addEventListener('click', drowWayToExit);
 
@@ -82,6 +82,29 @@
 
     function drowWayToExit() {
 
+        /*
+            Тут отчасти мой косяк - недосказанность.
+            Я вам сказал и показал, что слайс делает копию массива
+            и это правда. Вот только нужно учитывать, что у тебя массив
+            двумерный и каждый элемент массива тоже массив
+
+            получается как то так
+
+            [[c]] => [[c]] массив с элементом с переезжает в новый массив
+            но сам по себе он всё еще является ссылкой на один и тот же массив
+
+            Выходит что после обработки одной из матриц ты "портишь" её значения навсегда,
+            нужно сделать deep copy, скопировать не только 1ый, но и 2й уровни массива
+
+            Можно например так:
+
+            array.map(innerArray => innerArray.slice());
+
+            ES5
+            array.map(function(innerArray) {
+                return innerArray.slice();
+            });
+        */
         let matrixCopy = matrix[(SETTINGS.fieldNumber % 3)].slice();
         for(let i = 0; i < 10; ++i){
             for(let j = 0; j < 10; ++j){
@@ -97,6 +120,15 @@
     function buildMaze(matrix) {
 
         let $container = document.getElementById('maze');
+
+        /*
+            так как ты вызываешь этот метод для разных наборов данных,
+            неплохо было бы тут почистить/обнулить свой глобальный массив
+            
+            $cellElements
+
+        */
+
         for(let i = 0; i < SETTINGS.rows; i++) {
             for(let j = 0; j < SETTINGS.cols; j++) {
                 let cell = matrix[i][j];
