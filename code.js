@@ -104,6 +104,8 @@
             array.map(function(innerArray) {
                 return innerArray.slice();
             });
+
+            И у тебя аж 3 таких места, где ты делаешь копии
         */
         let matrixCopy = matrix[(SETTINGS.fieldNumber % 3)].slice();
         for(let i = 0; i < 10; ++i){
