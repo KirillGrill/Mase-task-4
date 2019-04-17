@@ -9,7 +9,8 @@
             finish: 3,
             visited: 4
         },
-        cellClass: ['cell', 'wall', 'start', 'finish']
+        cellClass: ['cell', 'wall', 'start', 'finish'],
+        fieldNumber: 0
     };
 
     let startCell = [];
@@ -50,20 +51,16 @@
         [3,0,0,0,0,0,0,0,0,0]
     ]];
 
-   window.addEventListener('load', init);
-
-    function fieldNumber() {
-        let numberOfField = -1;
-        return function() {
-            return ++numberOfField % 3;
-        }
-    }
-
-    let numberOfField = fieldNumber();
+    window.addEventListener('load', init);
 
     function init() {
 
-        let matrixCopy = matrix[numberOfField()].slice();
+        const newField = document.getElementById('newField');
+        const findWayToExit = document.getElementById('findWayToExit');
+        newField.addEventListener('click', drowNewField);
+        findWayToExit.addEventListener('click', drowWayToExit);
+
+        let matrixCopy = matrix[SETTINGS.fieldNumber].slice();
         buildMaze(matrixCopy);
 
         for(let i = 0; i < 10; ++i){//------------------определяем координаты старта
@@ -72,15 +69,20 @@
                     startCell = [j,i];
             }
         }
-
-        bildWayToStart (findExit(matrixCopy), matrixCopy);//поиск и отрисовку пути нужно вынемти в отдельную фунцию типа drowWayToExit, которая описанна ниже.
-                                                         // Но я не могу понять как передавать туда текущий номер матрици лабиринта из массива
-
     }
 
-    /*function drowWayToExit() {
+    function drowNewField() {
+        let $container = document.getElementById('maze');
+        $container.innerHTML = '';
 
-        let matrixCopy = matrix[numberOfField() - 1].slice();
+        let matrixCopy = matrix[(++SETTINGS.fieldNumber % 3)].slice();
+        buildMaze(matrixCopy);
+        console.log(SETTINGS.fieldNumber % 3);
+    }
+
+    function drowWayToExit() {
+
+        let matrixCopy = matrix[(SETTINGS.fieldNumber % 3)].slice();
         for(let i = 0; i < 10; ++i){
             for(let j = 0; j < 10; ++j){
                 if(matrixCopy[i][j] === 2)
@@ -89,13 +91,12 @@
         }
 
         bildWayToStart (findExit(matrixCopy), matrixCopy);
-    }*/
+    }
 
 
     function buildMaze(matrix) {
-        let $container = document.getElementById('maze');
-        $container.innerHTML = '';
 
+        let $container = document.getElementById('maze');
         for(let i = 0; i < SETTINGS.rows; i++) {
             for(let j = 0; j < SETTINGS.cols; j++) {
                 let cell = matrix[i][j];
@@ -109,6 +110,7 @@
     }
 
     function findExit(matrix) {
+
         let move = 1;
         let nextCells = [startCell];
         let mode = 'find finish';
@@ -190,7 +192,6 @@
             if (cell === SETTINGS.cellState.free) {
                 $cellElements[y * SETTINGS.rows + x].innerHTML = move;
                 matrix[y][x] = SETTINGS.cellState.visited;
-
                 return [x, y];
             }
 
