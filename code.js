@@ -23,12 +23,12 @@
         [1,1,1,0,1,0,1,0,1,0],
         [0,0,0,0,1,0,0,0,1,0],
         [1,1,1,1,1,1,0,0,1,1],
-        [0,0,1,0,0,0,0,0,0,0],
+        [3,0,1,0,0,0,0,0,0,0],
         [0,0,1,1,1,1,1,1,0,0],
-        [0,3,0,0,1,0,0,1,0,0],
+        [0,0,0,0,1,0,0,1,0,0],
         [0,0,0,0,0,0,0,0,0,0]
     ], [
-        [0,0,0,1,0,0,0,1,0,0],
+        [0,0,0,1,0,1,0,1,0,1],
         [0,0,1,1,3,0,0,0,0,1],
         [0,1,1,0,0,1,1,0,1,1],
         [0,0,0,0,0,1,0,0,1,0],
@@ -46,7 +46,7 @@
         [0,0,1,1,1,1,1,0,0,0],
         [0,0,0,0,0,1,0,0,0,0],
         [1,1,1,0,0,0,0,0,0,0],
-        [0,0,1,1,1,1,1,1,0,0],
+        [1,0,1,1,1,1,1,1,0,0],
         [0,0,0,0,0,0,0,0,0,0],
         [3,0,0,0,0,0,0,0,0,0]
     ]];
@@ -72,17 +72,17 @@
     }
 
     function drowNewField() {
-        let $container = document.getElementById('maze');
-        $container.innerHTML = '';
 
-        let matrixCopy = matrix[(++SETTINGS.fieldNumber % 3)].slice();
+        SETTINGS.fieldNumber = ++SETTINGS.fieldNumber % 3;
+        let matrixCopy = matrix[SETTINGS.fieldNumber].slice();
         buildMaze(matrixCopy);
+
         console.log(SETTINGS.fieldNumber % 3);
     }
 
     function drowWayToExit() {
 
-        let matrixCopy = matrix[(SETTINGS.fieldNumber % 3)].slice();
+        let matrixCopy = matrix[SETTINGS.fieldNumber].slice();
         for(let i = 0; i < 10; ++i){
             for(let j = 0; j < 10; ++j){
                 if(matrixCopy[i][j] === 2)
@@ -91,12 +91,14 @@
         }
 
         bildWayToStart (findExit(matrixCopy), matrixCopy);
+
     }
 
 
     function buildMaze(matrix) {
-
+        $cellElements = [];
         let $container = document.getElementById('maze');
+        $container.innerHTML = '';
         for(let i = 0; i < SETTINGS.rows; i++) {
             for(let j = 0; j < SETTINGS.cols; j++) {
                 let cell = matrix[i][j];
@@ -114,7 +116,7 @@
         let move = 1;
         let nextCells = [startCell];
         let mode = 'find finish';
-        while(!isPoint(matrix, nextCells, SETTINGS.cellState.finish)) {
+        while(!isPoint(matrix, nextCells, SETTINGS.cellState.finish)){
             nextCells = nextCells.map((cell) => {
 
                 return moveToNeighbours(cell, matrix, move, mode);
@@ -143,11 +145,13 @@
     }
 
     function isPoint(matrix, nextCells, point) {//используется для поиска нужной точки(старта или финиша)
+
         for(let i = 0; i < nextCells.length; ++i){
             let x = nextCells[i][0];
             let y = nextCells[i][1];
             let isPoint = matrix[y] && matrix[y][x];
             if(isPoint === point){
+
                 return nextCells[i];
             }
         }
@@ -192,6 +196,7 @@
             if (cell === SETTINGS.cellState.free) {
                 $cellElements[y * SETTINGS.rows + x].innerHTML = move;
                 matrix[y][x] = SETTINGS.cellState.visited;
+               // $cellElements[y * SETTINGS.rows + x].classList.remove('free');
                 return [x, y];
             }
 
@@ -205,6 +210,7 @@
 
             if (cell === SETTINGS.cellState.visited ) {
                if(+$cellElements[y * SETTINGS.rows + x].innerHTML < move){
+                   // $cellElements[y * SETTINGS.rows + x].classList.remove('free');
                     $cellElements[y * SETTINGS.rows + x].classList.add('route');
                     matrix[y][x] = SETTINGS.cellState.free;
 
