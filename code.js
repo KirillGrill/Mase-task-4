@@ -60,12 +60,13 @@
         newField.addEventListener('click', drowNewField);
         findWayToExit.addEventListener('click', drowWayToExit);
 
-        let matrixCopy = matrix[SETTINGS.fieldNumber].slice();
-        buildMaze(matrixCopy);
+        let matrixCopy = matrix.map(field => field.slice());
+        let fieldCopy = matrixCopy[SETTINGS.fieldNumber];
+        buildMaze(fieldCopy);
 
         for(let i = 0; i < 10; ++i){//------------------определяем координаты старта
             for(let j = 0; j < 10; ++j){
-                if(matrixCopy[i][j] === 2)
+                if(fieldCopy[i][j] === 2)
                     startCell = [j,i];
             }
         }
@@ -74,23 +75,24 @@
     function drowNewField() {
 
         SETTINGS.fieldNumber = ++SETTINGS.fieldNumber % 3;
-        let matrixCopy = matrix[SETTINGS.fieldNumber].slice();
-        buildMaze(matrixCopy);
 
-        console.log(SETTINGS.fieldNumber % 3);
+        let matrixCopy = matrix.map(field => field.slice());
+        let fieldCopy = matrixCopy[SETTINGS.fieldNumber];
+        buildMaze(fieldCopy);
     }
 
     function drowWayToExit() {
 
-        let matrixCopy = matrix[SETTINGS.fieldNumber].slice();
+        let matrixCopy = matrix.map(field => field.slice());
+        let fieldCopy = matrixCopy[SETTINGS.fieldNumber];
         for(let i = 0; i < 10; ++i){
             for(let j = 0; j < 10; ++j){
-                if(matrixCopy[i][j] === 2)
+                if(fieldCopy[i][j] === 2)
                     startCell = [j,i];
             }
         }
 
-        bildWayToStart (findExit(matrixCopy), matrixCopy);
+        bildWayToStart (findExit(fieldCopy), fieldCopy);
 
     }
 
